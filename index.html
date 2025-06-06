@@ -20,7 +20,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: auto; /* fixed */
   }
 
   .card {
@@ -99,7 +99,8 @@
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     flex-grow: 1;
-    overflow-y: auto;
+    overflow-y: auto; /* fixed */
+    max-height: 100%;  /* fixed */
     padding: 15px 15px 60px 15px;
     margin-top: 10px;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
@@ -196,7 +197,6 @@
 
   let messages = [];
   let currentIndex = 0;
-  let autoScrollEnabled = true;
 
   startMusicBtn.addEventListener('click', () => {
     loadingText.classList.remove('hidden');
@@ -235,15 +235,8 @@
     messagesContainer.innerHTML = "";
     currentIndex = 0;
     scrollHint.classList.remove('hidden');
-    autoScrollEnabled = true;
 
     showNextMessage();
-  });
-
-  messagesContainer.addEventListener('scroll', () => {
-    if (messagesContainer.scrollTop + messagesContainer.clientHeight < messagesContainer.scrollHeight) {
-      autoScrollEnabled = false;
-    }
   });
 
   function showNextMessage() {
@@ -257,14 +250,12 @@
       p.innerHTML = messages[currentIndex];
       messagesContainer.appendChild(p);
 
-      if (autoScrollEnabled) {
-        setTimeout(() => {
-          messagesContainer.scrollTo({
-            top: messagesContainer.scrollHeight,
-            behavior: 'smooth'
-          });
-        }, 150);
-      }
+      setTimeout(() => {
+        messagesContainer.scrollTo({
+          top: messagesContainer.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 150);
 
       currentIndex++;
       setTimeout(showNextMessage, 1300);
