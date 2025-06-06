@@ -34,7 +34,7 @@
     flex-direction: column;
     height: 90vh;
     position: relative;
-    /* overflow: hidden; */ /* সরিয়ে দেওয়া হয়েছে */
+    overflow: hidden;
   }
 
   h1 {
@@ -98,14 +98,13 @@
   #messagesContainer {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
-    height: 70vh; /* fixed height for scroll */
+    flex-grow: 1;
     overflow-y: auto;
     padding: 15px 15px 60px 15px;
     margin-top: 10px;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
     scroll-behavior: smooth;
     z-index: 2;
-    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
   }
 
   .message {
@@ -178,7 +177,275 @@
 </div>
 
 <audio id="bgMusic" loop>
-  <source src="https://files.catbox.moe/irqxdx.mp3" type="audio/mpeg" />
+  <source src="bgMusic.mp3" type="audio/mpeg" />
+</audio>
+
+<script>
+  const startMusicBtn = document.getElementById('startMusicBtn');
+  const loadingText = document.getElementById('loadingText');
+  const startMusicSection = document.getElementById('startMusicSection');
+
+  const inputSection = document.getElementById('inputSection');
+  const nameInput = document.getElementById('nameInput');
+  const startGreetingBtn = document.getElementById('startGreetingBtn');
+
+  const messageSection = document.getElementById('messageSection');
+  const messagesContainer = document.getElementById('messagesContainer');
+
+  const bgMusic = document.getElementById('bgMusic');
+  const scrollHint = document.getElementById('scrollHint');
+
+  let messages = [];
+  let currentIndex = 0;
+
+  startMusicBtn.addEventListener('click', () => {
+    loadingText.classList.remove('hidden');
+    bgMusic.play().then(() => {
+      loadingText.classList.add('hidden');
+      startMusicSection.classList.add('hidden');
+      inputSection.classList.remove('hidden');
+      nameInput.focus();
+    }).catch(() => {
+      alert('অডিও চালু করতে সমস্যা হচ্ছে। আবার চেষ্টা করুন।');
+      loadingText.classList.add('hidden');
+    });
+  });
+
+  startGreetingBtn.addEventListener('click', () => {
+    let name = nameInput.value.trim();
+    if (!name) {
+      alert('অনুগ্রহ করে আপনার নাম লিখুন!');
+      nameInput.focus();
+      return;
+    }
+
+    const highlightedName = `<span class="username">${name}</span>`;
+
+    messages = [
+      `🌙 ঈদ মোবারক, ${highlightedName}! আপনার জন্য রইল অনেক অনেক শুভেচ্ছা ও ভালোবাসা। ✨`,
+      `✨ আল্লাহ্ আপনার জীবনে সুখ, শান্তি ও সমৃদ্ধি দান করুন। ঈদ মোবারক, ${highlightedName}! 🌸`,
+      `🌟 ঈদ হোক খুশির দিন, পরিবার-পরিজনের সাথে কাটুক সময়। শুভ ঈদ, ${highlightedName}! 🎉`,
+      `🕌 প্রিয়জনদের সঙ্গে কাটুক এই পবিত্র দিন। ঈদ মোবারক, ${highlightedName}! 🌙`,
+      `💫 আল্লাহ্ আপনার সকল দোয়া কবুল করুন। ঈদ মোবারক, ${highlightedName}! 🌹`,
+      `🎁 ❤️ Nousad এর পক্ষ থেকে আপনাকে জানাই ঈদের আন্তরিক শুভেচ্ছা ও ভালোবাসা! ❤️ 🎁`
+    ];
+
+    inputSection.classList.add('hidden');
+    messageSection.classList.remove('hidden');
+    messagesContainer.innerHTML = "";
+    currentIndex = 0;
+    scrollHint.classList.remove('hidden');
+
+    showNextMessage();
+  });
+
+  function showNextMessage() {
+    if (currentIndex < messages.length) {
+      const p = document.createElement('p');
+      p.className = 'message';
+      if (currentIndex === messages.length - 1) {
+        p.classList.add('premium');
+      }
+
+      p.innerHTML = messages[currentIndex];
+      messagesContainer.appendChild(p);
+
+      setTimeout(() => {
+        messagesContainer.scrollTo({
+          top: messagesContainer.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 150);
+
+      currentIndex++;
+      setTimeout(showNextMessage, 1300);
+    } else {
+      scrollHint.classList.add('hidden');
+    }
+  }
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>✨ ঈদের শুভেচ্ছা ✨</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali&display=swap');
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    height: 100%;
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+    font-family: 'Noto Sans Bengali', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .card {
+    background: rgba(0,0,0,0.65);
+    border-radius: 20px;
+    padding: 30px 25px;
+    width: 95%;
+    max-width: 500px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    color: #ffda44;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 8px rgba(255, 255, 255, 0.7);
+    z-index: 2;
+  }
+
+  #scrollHint {
+    text-align: center;
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    animation: blink 1.2s infinite;
+    z-index: 2;
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    background: linear-gradient(90deg, #f0c419, #f9d342);
+    color: #111;
+    box-shadow: 0 5px 15px rgba(249, 211, 66, 0.6);
+    margin-top: 12px;
+    transition: background 0.3s ease;
+    z-index: 2;
+  }
+
+  button:hover {
+    background: linear-gradient(90deg, #f9d342, #f0c419);
+  }
+
+  input[type="text"] {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    margin-top: 10px;
+    font-family: 'Noto Sans Bengali', sans-serif;
+    z-index: 2;
+  }
+
+  #loadingText {
+    color: #ffd700;
+    font-size: 1.1rem;
+    margin-top: 15px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  #messagesContainer {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px 15px 60px 15px;
+    margin-top: 10px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+    scroll-behavior: smooth;
+    z-index: 2;
+  }
+
+  .message {
+    background: rgba(255, 255, 255, 0.15);
+    color: #bbf7d0;
+    font-size: 1.2rem;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    box-shadow: 0 0 10px #bbf7d0;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.7s forwards;
+  }
+
+  .message.premium {
+    background: linear-gradient(135deg, #ffe259, #ffa751);
+    color: #2c2c2c;
+    font-size: 1.4rem;
+    font-weight: 900;
+    box-shadow: 0 0 20px #ffa751, 0 0 40px #ffe259;
+    border: 2px solid #fff;
+  }
+
+  .username {
+    color: #ffdd57;
+    font-weight: bold;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <h1>✨ ঈদ মোবারক ✨</h1>
+  <p id="scrollHint" class="hidden">🔻 Scroll Down 🔻</p>
+
+  <div id="startMusicSection">
+    <button id="startMusicBtn">🎵 সংগীত চালু করুন 🎵</button>
+    <p id="loadingText" class="hidden">লোড হচ্ছে... অনুগ্রহ করে অপেক্ষা করুন 🎵</p>
+  </div>
+
+  <div id="inputSection" class="hidden">
+    <p style="font-weight:700; font-size:1.1rem;">আপনার নাম লিখুন:</p>
+    <input type="text" id="nameInput" placeholder="আপনার নাম লিখুন" autocomplete="off" />
+    <button id="startGreetingBtn">শুভেচ্ছা শুরু করুন</button>
+  </div>
+
+  <div id="messageSection" class="hidden">
+    <div id="messagesContainer"></div>
+  </div>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="bgMusic.mp3" type="audio/mpeg" />
 </audio>
 
 <script>
