@@ -150,7 +150,6 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.3; }
   }
-
 </style>
 </head>
 <body>
@@ -177,7 +176,7 @@
 </div>
 
 <audio id="bgMusic" loop>
-  <source src="bgMusic.mp3" type="audio/mpeg" />
+  <source src="https://files.catbox.moe/irqxdx.mp3" type="audio/mpeg" />
 </audio>
 
 <script>
@@ -197,6 +196,7 @@
 
   let messages = [];
   let currentIndex = 0;
+  let autoScrollEnabled = true;
 
   startMusicBtn.addEventListener('click', () => {
     loadingText.classList.remove('hidden');
@@ -235,8 +235,15 @@
     messagesContainer.innerHTML = "";
     currentIndex = 0;
     scrollHint.classList.remove('hidden');
+    autoScrollEnabled = true;
 
     showNextMessage();
+  });
+
+  messagesContainer.addEventListener('scroll', () => {
+    if (messagesContainer.scrollTop + messagesContainer.clientHeight < messagesContainer.scrollHeight) {
+      autoScrollEnabled = false;
+    }
   });
 
   function showNextMessage() {
@@ -250,12 +257,14 @@
       p.innerHTML = messages[currentIndex];
       messagesContainer.appendChild(p);
 
-      setTimeout(() => {
-        messagesContainer.scrollTo({
-          top: messagesContainer.scrollHeight,
-          behavior: 'smooth'
-        });
-      }, 150);
+      if (autoScrollEnabled) {
+        setTimeout(() => {
+          messagesContainer.scrollTo({
+            top: messagesContainer.scrollHeight,
+            behavior: 'smooth'
+          });
+        }, 150);
+      }
 
       currentIndex++;
       setTimeout(showNextMessage, 1300);
